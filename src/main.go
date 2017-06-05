@@ -6,7 +6,7 @@ import (
 	"html/template"
 	"net"
 	"net/http"
-  "os"
+	"os"
 )
 
 type webConfig struct {
@@ -57,12 +57,12 @@ func jsonHandler(writer http.ResponseWriter, req *http.Request, clientConfig *we
 }
 
 func mainHandler(writer http.ResponseWriter, req *http.Request, clientConfig *webConfig) {
-  template, err := template.ParseFiles("templates/main.html")
-  if err != nil {
-  		http.Error(writer, err.Error(), http.StatusInternalServerError)
-  		return
-  }
-  template.Execute(writer, clientConfig)
+	template, err := template.ParseFiles("templates/main.html")
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	template.Execute(writer, clientConfig)
 }
 
 func makeHandler(fn func(http.ResponseWriter, *http.Request, *webConfig)) http.HandlerFunc {
@@ -73,21 +73,21 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, *webConfig)) http.H
 }
 
 func getEnv(key, fallback string) string {
-    value := os.Getenv(key)
-    if len(value) == 0 {
-        return fallback
-    }
-    return value
+	value := os.Getenv(key)
+	if len(value) == 0 {
+		return fallback
+	}
+	return value
 }
 
 func main() {
-  // Get information from the environment variable 
-  WebPort := getEnv(envWebPort, defaultWebPort)
-  ListenIp := getEnv(envWebListenIp, defaultWebListenIp)
+	// Get information from the environment variable
+	WebPort := getEnv(envWebPort, defaultWebPort)
+	ListenIp := getEnv(envWebListenIp, defaultWebListenIp)
 
-  // Declare web Handlers
+	// Declare web Handlers
 	http.HandleFunc("/ip", makeHandler(ipHandler))
 	http.HandleFunc("/all.json", makeHandler(jsonHandler))
 	http.HandleFunc("/", makeHandler(mainHandler))
-	http.ListenAndServe(ListenIp + ":" + WebPort, nil)
+	http.ListenAndServe(ListenIp+":"+WebPort, nil)
 }
