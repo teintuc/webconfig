@@ -46,8 +46,15 @@ func (config *webConfig) isCurl() (bool) {
 	return strings.HasPrefix(config.UserAgent, "curl/")
 }
 
+func (config *webConfig) getIp() (string) {
+	if len(config.XForwardedFor) == 0 {
+		return config.Ip.String()
+	}
+	return config.XForwardedFor
+}
+
 func ipHandler(writer http.ResponseWriter, req *http.Request, clientConfig *webConfig) {
-	fmt.Fprintf(writer, "%s", clientConfig.Ip)
+	fmt.Fprintf(writer, "%s", clientConfig.getIp())
 }
 
 func jsonHandler(writer http.ResponseWriter, req *http.Request, clientConfig *webConfig) {
