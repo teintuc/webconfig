@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"strings"
 )
 
 type webConfig struct {
@@ -41,8 +42,19 @@ func formatClientInformation(req *http.Request) *webConfig {
 	return config
 }
 
+func (config *webConfig) isCurl() (bool) {
+	return strings.HasPrefix(config.UserAgent, "curl/")
+}
+
+func (config *webConfig) getIp() (string) {
+	if len(config.XForwardedFor) == 0 {
+		return config.Ip.String()
+	}
+	return config.XForwardedFor
+}
+
 func ipHandler(writer http.ResponseWriter, req *http.Request, clientConfig *webConfig) {
-	fmt.Fprintf(writer, "%s", clientConfig.Ip)
+	fmt.Fprintf(writer, "%s", clientConfig.getIp())
 }
 
 func jsonHandler(writer http.ResponseWriter, req *http.Request, clientConfig *webConfig) {
@@ -57,12 +69,18 @@ func jsonHandler(writer http.ResponseWriter, req *http.Request, clientConfig *we
 }
 
 func mainHandler(writer http.ResponseWriter, req *http.Request, clientConfig *webConfig) {
-	template, err := template.ParseFiles("templates/main.html")
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
-		return
+	// If it is a curl request, we just give the ip
+	if clientConfig.isCurl() == true {
+		ipHandler(writer, req, clientConfig)
+	} else {
+		// Otherwise display a page with all the information
+		template, err := template.ParseFiles("templates/main.html")
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		template.Execute(writer, clientConfig)
 	}
-	template.Execute(writer, clientConfig)
 }
 
 func makeHandler(fn func(http.ResponseWriter, *http.Request, *webConfig)) http.HandlerFunc {
