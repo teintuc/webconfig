@@ -11,7 +11,7 @@ import (
 )
 
 type webConfig struct {
-	Ip            net.IP
+	Ip            string
 	Host          string
 	Port          string
 	Method        string
@@ -31,7 +31,7 @@ func formatClientInformation(req *http.Request) *webConfig {
 	ip, port, _ := net.SplitHostPort(req.RemoteAddr)
 
 	config := new(webConfig)
-	config.Ip = net.ParseIP(ip)
+	config.Ip = ip
 	config.Host = req.Host
 	config.Port = port
 	config.Method = req.Method
@@ -48,7 +48,7 @@ func (config *webConfig) isCurl() (bool) {
 
 func (config *webConfig) getIp() (string) {
 	if len(config.XForwardedFor) == 0 {
-		return config.Ip.String()
+		return config.Ip
 	}
 	return config.XForwardedFor
 }
