@@ -32,4 +32,7 @@ fclean: clean
 get:
 	$(GO) get
 
+image: all
+	
+
 re: fclean all
