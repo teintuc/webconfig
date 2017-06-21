@@ -74,12 +74,17 @@ func mainHandler(writer http.ResponseWriter, req *http.Request, clientConfig *we
 		ipHandler(writer, req, clientConfig)
 	} else {
 		// Otherwise display a page with all the information
-		template, err := template.ParseFiles("templates/main.html")
-		if err != nil {
-			http.Error(writer, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		template.Execute(writer, clientConfig)
+		renderTemplate(writer, clientConfig)
+	}
+}
+
+/* Cache and render the main template when needed */
+var templates = template.Must(template.ParseFiles("templates/main.html"))
+
+func renderTemplate(writer http.ResponseWriter, clientConfig *webConfig) {
+	err := templates.ExecuteTemplate(writer, "main.html", clientConfig)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
 	}
 }
 
