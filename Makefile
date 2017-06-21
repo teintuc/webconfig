@@ -40,5 +40,6 @@ get:
 image: all
 	$(DOCKER) build -t $(NAME) .
 
-
 re: fclean all
+
+.PHONY: image get 
