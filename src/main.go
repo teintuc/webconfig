@@ -42,11 +42,11 @@ func formatClientInformation(req *http.Request) *webConfig {
 	return config
 }
 
-func (config *webConfig) isCurl() (bool) {
+func (config *webConfig) isCurl() bool {
 	return strings.HasPrefix(config.UserAgent, "curl/")
 }
 
-func (config *webConfig) getIp() (string) {
+func (config *webConfig) getIp() string {
 	if len(config.XForwardedFor) == 0 {
 		return config.Ip
 	}
