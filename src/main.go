@@ -6,37 +6,13 @@ import (
 	"html/template"
 	"net"
 	"net/http"
-	"os"
-	"strings"
 )
-
-type webConfig struct {
-	Ip            string
-	Host          string
-	Port          string
-	Method        string
-	Language      string
-	UserAgent     string
-	XForwardedFor string
-}
 
 const envWebPort = "WEBCONFIG_PORT"
 const envWebListenIp = "WEBCONFIG_LISTEN_IP"
 
 const defaultWebPort = "8080"
 const defaultWebListenIp = "0.0.0.0"
-
-/* Struct helpers */
-func (config *webConfig) isCurl() bool {
-	return strings.HasPrefix(config.UserAgent, "curl/")
-}
-
-func (config *webConfig) getIp() string {
-	if len(config.XForwardedFor) == 0 {
-		return config.Ip
-	}
-	return config.XForwardedFor
-}
 
 func ipHandler(writer http.ResponseWriter, req *http.Request, clientConfig *webConfig) {
 	fmt.Fprintf(writer, "%s", clientConfig.getIp())
@@ -97,19 +73,10 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, *webConfig)) http.H
 	}
 }
 
-/* Get the value from the environment or get the default values */
-func getEnv(key, fallback string) string {
-	value := os.Getenv(key)
-	if len(value) == 0 {
-		return fallback
-	}
-	return value
-}
-
 func main() {
 	// Get information from the environment variable
-	WebPort := getEnv(envWebPort, defaultWebPort)
-	ListenIp := getEnv(envWebListenIp, defaultWebListenIp)
+	WebPort := Getenv(envWebPort, defaultWebPort)
+	ListenIp := Getenv(envWebListenIp, defaultWebListenIp)
 
 	// Declare web Handlers
 	http.HandleFunc("/ip", makeHandler(ipHandler))

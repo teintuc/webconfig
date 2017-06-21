@@ -3,7 +3,9 @@ NAME=webconfig
 
 PROJECT=github.com/teintuc/$(NAME)
 
-SRC=	src/main.go
+SRC=	src/main.go \
+					src/data.go \
+					src/env.go
 
 GO=/usr/bin/go
 
