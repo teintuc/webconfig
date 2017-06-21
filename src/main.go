@@ -26,22 +26,7 @@ const envWebListenIp = "WEBCONFIG_LISTEN_IP"
 const defaultWebPort = "8080"
 const defaultWebListenIp = "0.0.0.0"
 
-func formatClientInformation(req *http.Request) *webConfig {
-	// Get the cient ip
-	ip, port, _ := net.SplitHostPort(req.RemoteAddr)
-
-	config := new(webConfig)
-	config.Ip = ip
-	config.Host = req.Host
-	config.Port = port
-	config.Method = req.Method
-	config.Language = req.Header.Get("Accept-Language")
-	config.UserAgent = req.Header.Get("User-Agent")
-	config.XForwardedFor = req.Header.Get("X-Forwarded-For")
-
-	return config
-}
-
+/* Struct helpers */
 func (config *webConfig) isCurl() bool {
 	return strings.HasPrefix(config.UserAgent, "curl/")
 }
@@ -88,6 +73,23 @@ func renderTemplate(writer http.ResponseWriter, clientConfig *webConfig) {
 	}
 }
 
+/* Parse the web request */
+func formatClientInformation(req *http.Request) *webConfig {
+	// Get the cient ip
+	ip, port, _ := net.SplitHostPort(req.RemoteAddr)
+
+	config := new(webConfig)
+	config.Ip = ip
+	config.Host = req.Host
+	config.Port = port
+	config.Method = req.Method
+	config.Language = req.Header.Get("Accept-Language")
+	config.UserAgent = req.Header.Get("User-Agent")
+	config.XForwardedFor = req.Header.Get("X-Forwarded-For")
+
+	return config
+}
+
 func makeHandler(fn func(http.ResponseWriter, *http.Request, *webConfig)) http.HandlerFunc {
 	return func(writer http.ResponseWriter, req *http.Request) {
 		config := formatClientInformation(req)
@@ -95,6 +97,7 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, *webConfig)) http.H
 	}
 }
 
+/* Get the value from the environment or get the default values */
 func getEnv(key, fallback string) string {
 	value := os.Getenv(key)
 	if len(value) == 0 {
