@@ -5,7 +5,9 @@ PROJECT=github.com/teintuc/$(NAME)
 
 SRC=	src/main.go
 
-GO=go
+GO=/usr/bin/go
+
+DOCKER=/usr/bin/docker
 
 RM=rm -fr
 
@@ -33,6 +35,7 @@ get:
 	$(GO) get
 
 image: all
-	
+	$(DOCKER) build -t $(NAME) .
+
 
 re: fclean all
