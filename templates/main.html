@@ -5,38 +5,42 @@
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-  <table class="table">
-    <caption>Web Configuration</caption>
-    <tbody>
-      <tr>
-        <td>IP</td>
-        <td>{{.Ip}}</td>
-      </tr>
-      <tr>
-        <td>Host</td>
-        <td>{{.Host}}</td>
-      </tr>
-      <tr>
-        <td>Port</td>
-        <td>{{.Port}}</td>
-      </tr>
-      <tr>
-        <td>Method</td>
-        <td>{{.Method}}</td>
-      </tr>
-      <tr>
-        <td>Language</td>
-        <td>{{.Language}}</td>
-      </tr>
-      <tr>
-        <td>User-Agent</td>
-        <td>{{.UserAgent}}</td>
-      </tr>
-      <tr>
-        <td>Forwarded</td>
-        <td>{{.XForwardedFor}}</td>
-      </tr>
-    </tbody>
-  </table>
+    <div class="row">
+       <div class="col-xs-7 col-md-4">
+        <table class="table">
+          <caption>Web Configuration</caption>
+          <tbody>
+            <tr>
+              <td>IP</td>
+              <td>{{.Ip}}</td>
+            </tr>
+            <tr>
+              <td>Host</td>
+              <td>{{.Host}}</td>
+            </tr>
+            <tr>
+              <td>Port</td>
+              <td>{{.Port}}</td>
+            </tr>
+            <tr>
+              <td>Method</td>
+              <td>{{.Method}}</td>
+            </tr>
+            <tr>
+              <td>Language</td>
+              <td>{{.Language}}</td>
+            </tr>
+            <tr>
+              <td>User-Agent</td>
+              <td>{{.UserAgent}}</td>
+            </tr>
+            <tr>
+              <td>Forwarded</td>
+              <td>{{.XForwardedFor}}</td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
 </body>
 </html>
