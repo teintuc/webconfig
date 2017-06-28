@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 )
 
@@ -19,5 +20,8 @@ func main() {
 	http.HandleFunc("/ip", makeHandler(ipHandler))
 	http.HandleFunc("/all.json", makeHandler(jsonHandler))
 	http.HandleFunc("/", makeHandler(mainHandler))
-	http.ListenAndServe(ListenIp+":"+WebPort, nil)
+	// Log and Listen
+	log.Printf("Listening on %s:%s", ListenIp, WebPort)
+	err := http.ListenAndServe(ListenIp+":"+WebPort, nil)
+	log.Fatal(err)
 }
