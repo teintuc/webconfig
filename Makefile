@@ -25,21 +25,9 @@ uninstall:
 build:
 	$(GO) build -o $(NAME) $(SRC)
 
-fmt:
-	$(GO) fmt
-
-clean:
-	$(GO) clean
-
-fclean: clean
-	$(RM) $(NAME)
-
-get:
-	$(GO) get
-
 image: all
 	$(DOCKER) build -t $(NAME) .
 
 re: fclean all
 
-.PHONY: image get 
+.PHONY: image get
