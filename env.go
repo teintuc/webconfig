@@ -1,7 +1,7 @@
 package main
 
 import (
-  "os"
+	"os"
 )
 
 /* Get the value from the environment or get the default values */
